@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { get } = require('request');
+const fs = require('fs');
+const process = require('process');
 const request = require('request');
-const fs = require('fs')
 
 const TOKEN = process.env.TOKEN;
 var FOLLOWERS = []
@@ -91,23 +91,23 @@ const getFollowers = async (login, callback) => {
         }
     };
 
-    request.get(options, (err, res, body) => {
+    request.get(options, async (err, res, body) => {
         if (err) {
             console.log(err);
         }
-        const a = JSON.parse(body);
+        const test = []
+        const b = JSON.parse(body);
         console.log('Status: ' + res.statusCode);
-        // console.log(a.data);
-        // console.log(a.total);
-        // var cursor = a.pagination.cursor;
-        // while (cursor !== undefined) {
-        //     var resp = await getNextFollowers(id, cursor)
-
-        // }
-        callback(a.data);
+        var cursor = b.pagination.cursor;
+        while (cursor !== undefined) {
+            var resp = await getNextFollowers(id, cursor);
+            cursor = resp.pagination.cursor;
+            callback(resp.data);
+        }
+        callback(b.data);
     })
 }
 
-getFollowers('snowdraktv', (data) => {
-    populateArr(data).then(console.log(FOLLOWERS))
+getFollowers(process.argv[2], (data) => {
+    populateArr(data).then(fs.writeFile('./json/' + process.argv[2] + '.json', JSON.stringify(FOLLOWERS), () => {console.log('done')}))
 });
