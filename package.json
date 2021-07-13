@@ -1,0 +1,19 @@
+{
+  "name": "twitch-sandbox",
+  "version": "1.0.0",
+  "description": "Twitch API sandbox",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "twitch",
+    "api"
+  ],
+  "author": "mlizandier",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "request": "^2.88.2"
+  }
+}
