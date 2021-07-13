@@ -73,7 +73,6 @@ const getFollowers = async (login, callback) => {
         if (err) {
             console.log(err);
         }
-        const test = []
         const b = JSON.parse(body);
         console.log('Status: ' + res.statusCode);
         var cursor = b.pagination.cursor;
@@ -92,6 +91,6 @@ const getFollowers = async (login, callback) => {
             populateArr(data).then(fs.writeFile('./json/' + process.argv[2] + '.json', JSON.stringify(FOLLOWERS), () => {console.log('done')}))
         });
     } else {
-        throw new Error('Usage: \nnode getFollowers.js [username]');
+        console.log('Usage: \nnode getFollowers.js [username]');
     }
 })();
