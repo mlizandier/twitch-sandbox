@@ -6,28 +6,6 @@ const request = require('request');
 const TOKEN = process.env.TOKEN;
 var FOLLOWERS = []
 
-const getToken = (url, callback) => {
-    const options = {
-        url: url,
-        json: true,
-        body: {
-            client_id: process.env.CLIENT_ID,
-            client_secret: process.env.CLIENT_SECRET,
-            grant_type: 'client_credentials'
-        }
-    };
-
-    request.post(options, (err, res, body) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Status: ' + res.statusCode);
-        console.log(body);
-
-        callback(res);
-    });
-};
-
 const populateArr = async (data) => {
     for (index in data) {
         FOLLOWERS.push({id: data[index].from_id, login: data[index].from_login});
@@ -108,6 +86,12 @@ const getFollowers = async (login, callback) => {
     })
 }
 
-getFollowers(process.argv[2], (data) => {
-    populateArr(data).then(fs.writeFile('./json/' + process.argv[2] + '.json', JSON.stringify(FOLLOWERS), () => {console.log('done')}))
-});
+(function(){
+    if (process.argv.length === 3) {
+        getFollowers(process.argv[2], (data) => {
+            populateArr(data).then(fs.writeFile('./json/' + process.argv[2] + '.json', JSON.stringify(FOLLOWERS), () => {console.log('done')}))
+        });
+    } else {
+        throw new Error('Usage: \nnode getFollowers.js [username]');
+    }
+})();
